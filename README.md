@@ -1,5 +1,5 @@
 # ProgrammeerTheorie
 
-#JORDY
-##Mike
+##JORDY
+#Mike
 Tim
