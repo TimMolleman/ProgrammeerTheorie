@@ -62,7 +62,37 @@ class FruitFlies:
                     self.count += 1
                     self.countgene += ((y + 1) - (self.start - 1))
                     self.start += 1
+
         return (self.count, self.countgene)
+
+# class TrieNode:
+#
+#     def __init__(self):
+#         self.val = [3, 5, 2, 4, 1]
+#         self.pointers={}
+#
+# class Trie:
+#
+#     def __init__(self):
+#         self.root = TrieNode()
+#
+# shit = TrieNode()
+# print shit.val
+#
+
+# aantal swaps dat mogelijk is per array
+dros = [2, 4, 5, 1, 3]
+pos_swaps = 0
+num = 1
+for i in range(len(dros) - 1):
+    pos_swaps += len(dros) - num
+    num += 1
+
+
+print pos_swaps
+
+
+
 # av_trials = []
 #
 # for i in range(100):
@@ -71,7 +101,7 @@ class FruitFlies:
 #     av_trials.append(fly_count)
 #
 # print numpy.mean(av_trials)
-
-f = FruitFlies()
-fly_count2 = f.BubbleSort()
-print fly_count2
+#
+# f = FruitFlies()
+# fly_count2 = f.BubbleSort()
+# print fly_count2
