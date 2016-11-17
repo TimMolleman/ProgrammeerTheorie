@@ -25,7 +25,20 @@ class FruitFlies:
                         print self.dros
                         self.count += 2
         return self.count
-
+    def new_least_steps(self):
+        self.end = 25
+        self.start = 1
+        for x in range(0, 25):
+            for y in range(x, 25):
+                if self.dros[y] == self.end and self.dros != self.mir:
+                    self.dros[y: self.end] = list(reversed(self.dros[y: self.end]))
+                    self.count += 1
+                    self.end -= 1
+                elif self.dros[y] == self.start and self.dros != self.mir:
+                    self.dros[self.start - 1: y + 1] = list(reversed(self.dros[self.start - 1: y + 1]))
+                    self.count += 1
+                    self.start += 1
+        return self.count
 # av_trials = []
 #
 # for i in range(100):
@@ -36,5 +49,5 @@ class FruitFlies:
 # print numpy.mean(av_trials)
 
 f = FruitFlies()
-fly_count2 = f.BubbleSort()
+fly_count2 = f.new_least_steps()
 print fly_count2
