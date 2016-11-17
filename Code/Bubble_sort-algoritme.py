@@ -11,5 +11,5 @@ while dros != mir:
             if dros[y] > dros[y + 1]:
                 dros[y:y + 2] = list(reversed(dros[y:y + 2]))
                 print dros
-                count += 1
+                count += 2
 print count

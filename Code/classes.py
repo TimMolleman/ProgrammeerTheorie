@@ -24,8 +24,7 @@ class FruitFlies:
                     if self.dros[y] > self.dros[y + 1]:
                         self.dros[y:y + 2] = list(reversed(self.dros[y:y + 2]))
                         print self.dros
-                        self.count += 1
-        print self.count
+                        self.count += 2
 
 av_trials = []
 
