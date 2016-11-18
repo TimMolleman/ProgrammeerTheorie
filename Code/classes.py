@@ -1,6 +1,7 @@
 # importeer random module
 import random
 import numpy
+import copy
 
 # define melanogaster
 class FruitFlies:
@@ -62,8 +63,41 @@ class FruitFlies:
                     self.count += 1
                     self.countgene += ((y + 1) - (self.start - 1))
                     self.start += 1
-
         return (self.count, self.countgene)
+    # count possible number of swaps
+    def Amount_swaps(self):
+        # set counter for possible swaps
+        self.pos_swaps = 0
+        # set counter for counting swaps
+        self.num = 1
+        # count and return number of swaps
+        for i in range(len(self.dros) - 1):
+            self.pos_swaps += len(self.dros) - self.num
+            self.num += 1
+        return self.pos_swaps
+    # gives array of all possible swaps
+    def Possible_swaps(self, amount_of_pos):
+        # initialiseer de grenzen van de array
+        self.array = []
+        self.right = 1
+        self.left = 0
+        # doe alle mogelijke swaps voor de huidige 'dros' in array
+        for x in range(0, amount_of_pos):
+            self.dros[self.left:self.right + 1] = list(reversed(self.dros[self.left:self.right + 1]))
+            self.back_up = copy.deepcopy(self.dros)
+            self.array.append(self.back_up)
+            self.dros[self.left:self.right + 1] = list(reversed(self.dros[self.left:self.right + 1]))
+            self.right += 1
+            if self.right == len(self.dros):
+                self.left += 1
+                self.right = self.left + 1
+
+        return self.array
+
+f = FruitFlies()
+swaps = f.Amount_swaps()
+array = f.Possible_swaps(swaps)
+print array
 
 # class TrieNode:
 #
@@ -81,16 +115,6 @@ class FruitFlies:
 #
 
 # aantal swaps dat mogelijk is per array
-dros = [2, 4, 5, 1, 3]
-pos_swaps = 0
-num = 1
-for i in range(len(dros) - 1):
-    pos_swaps += len(dros) - num
-    num += 1
-
-
-print pos_swaps
-
 
 
 # av_trials = []
