@@ -8,13 +8,18 @@ class FruitFlies:
     # initieer drosophila
     def __init__(self):
         # definieer random volgorde 25 genen
-        self.dros = random.sample(range(1, 26), 25)
+        #self.dros = [3,2,1,6,4,5]
+        self.dros = random.sample(range(1, 7), 6)
+        #self.dros = [6,7,5,4,3,2,1]
         # definieer genen van miranda 1 tot en met 25
-        self.mir = range(1,26)
+        self.mir = range(1,7)
         # set counter voor inversions
         self.count = 0
         #set counter voor genswaps
         self.countgene = 0
+        self.count1 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        self.layer = 0
+        self.kitkat = 0
     # pancake sort
     def least_steps(self):
         # itereer over genen
@@ -46,11 +51,11 @@ class FruitFlies:
     # double pancake
     def new_least_steps(self):
         # set end and start of genome
-        self.end = 25
+        self.end = 5
         self.start = 1
         # iterate over de genen
-        for x in range(0, 25):
-            for y in range(x, 25):
+        for x in range(0, 5):
+            for y in range(x, 5):
                 # als het gen aan het einde hoort flip en set nieuw eind
                 if self.dros[y] == self.end and self.dros != self.mir:
                     self.dros[y: self.end] = list(reversed(self.dros[y: self.end]))
@@ -76,6 +81,88 @@ class FruitFlies:
             self.num += 1
         return self.pos_swaps
     # gives array of all possible swaps
+    def Possible_swaps(self,root, amount_of_pos):
+        # initialiseer de grenzen van de array
+        self.array = []
+        self.right = 1
+        self.left = 0
+        # doe alle mogelijke swaps voor de huidige 'dros' in array
+        for x in range(0, amount_of_pos):
+            root[self.left:self.right + 1] = list(reversed(root[self.left:self.right + 1]))
+            self.back_up = copy.deepcopy(root)
+            self.array.append(self.back_up)
+            root[self.left:self.right + 1] = list(reversed(root[self.left:self.right + 1]))
+            self.right += 1
+            if self.right == len(root):
+                self.left += 1
+                self.right = self.left + 1
+
+        return self.array
+
+
+    def brute_force(self, root, mir):
+        print "go"
+        if self.kitkat == 1:
+            return "found"
+        self.children = []
+        if root == 0:
+            self.sec_count = 1
+            root = self.dros
+            self.children = self.Possible_swaps(root, 15)
+        elif root == 1:
+            root = self.dros
+            self.children = self.Possible_swaps(root, 15)
+            for x in range(0, 15):
+                if self.count1[x] != 0:
+                    self.layer = x
+                    print self.layer, "118"
+                    if self.count1[x] == 215 and x > 0:
+                        self.count[x] = 1
+                    for y in range(0, x + 1):
+                        #print self.children, "120"
+                        root = self.children[self.count1[y] - 1]
+                        #print root, "122"
+                        self.children = self.Possible_swaps(root, 15)
+                        #print self.children
+                    break
+        else:
+            print root, self.mir, "129"
+            self.children = self.Possible_swaps(root, 15)
+
+
+        self.target = mir
+        print root, self.children
+        #print "go", root
+        for x in range(0, 15):
+            #self.sec_count +=1
+            for y in range(0, 15):
+                #print self.children[x], self.target[y], "134"
+                if self.children[x] == self.mir:
+                    print "found", self.children[x]
+                    self.count1[self.layer + 1] = x + 1
+                    print self.count1
+                    self.kitkat = 1
+                    return self.count1
+                elif self.children[x] == self.target[y]:
+                    print "love bottem up", self.layer, self.children[x], self.target[y]
+                    self.count1[self.layer + 1] = x + 1
+                    self.layer += 1
+                    self.brute_force(self.children[x], mir)
+                else:
+                    self.countgene += 1
+        self.count1[self.layer] += 1
+        self.layer += 1
+        print self.count1, "141", self.layer
+        self.brute_force(1, mir)
+                    # print "wtf"
+
+
+
+
+
+class Miranda:
+    def __init__(self):
+        self.mir = range(1,7)
     def Possible_swaps(self, amount_of_pos):
         # initialiseer de grenzen van de array
         self.array = []
@@ -83,22 +170,25 @@ class FruitFlies:
         self.left = 0
         # doe alle mogelijke swaps voor de huidige 'dros' in array
         for x in range(0, amount_of_pos):
-            self.dros[self.left:self.right + 1] = list(reversed(self.dros[self.left:self.right + 1]))
-            self.back_up = copy.deepcopy(self.dros)
+            self.mir[self.left:self.right + 1] = list(reversed(self.mir[self.left:self.right + 1]))
+            self.back_up = copy.deepcopy(self.mir)
             self.array.append(self.back_up)
-            self.dros[self.left:self.right + 1] = list(reversed(self.dros[self.left:self.right + 1]))
+            self.mir[self.left:self.right + 1] = list(reversed(self.mir[self.left:self.right + 1]))
             self.right += 1
-            if self.right == len(self.dros):
+            if self.right == len(self.mir):
                 self.left += 1
                 self.right = self.left + 1
-
         return self.array
 
 f = FruitFlies()
+m = Miranda()
+mir = m.Possible_swaps(21)
 swaps = f.Amount_swaps()
-array = f.Possible_swaps(swaps)
+print swaps
+array = f.Possible_swaps(f.dros, swaps)
 print array
-
+deze = f.brute_force(0, mir)
+print deze
 # class TrieNode:
 #
 #     def __init__(self):
@@ -115,6 +205,7 @@ print array
 #
 
 # aantal swaps dat mogelijk is per array
+
 
 
 # av_trials = []
