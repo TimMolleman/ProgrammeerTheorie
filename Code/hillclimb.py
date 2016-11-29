@@ -1,5 +1,6 @@
 import copy
 import random
+import numpy
 
 # dros arrays
 dros = random.sample(range(1, 26), 25)
@@ -11,9 +12,6 @@ num = 1
 for i in range(len(dros) - 1):
     pos_swaps += len(dros) - num
     num += 1
-
-# maak archief om de nodes op te slaan waarvan al kinderen zijn gemaakt
-archive = []
 
 # def hillClimb(dros, mir, swaps):
 #
@@ -75,84 +73,172 @@ archive = []
 #         print counter
 #
 
-def hillClimb(dros, mir, swaps):
+def bestFirst(mir, swaps):
 
-    # maak de eerste node aan (de dros) en sla op in archief
-    currentnodes = [dros]
-    back_up1 = copy.deepcopy(currentnodes)
-    archive.append(back_up1)
+        # maak archief om de nodes op te slaan waarvan al kinderen zijn gemaakt
+        archive = []
 
-    # maak een counter om aantal stappen te tellen van drosophila naar miranda
-    counter = 0
+        # maak de eerste node aan (de dros) en sla op in archief
+        dros = random.sample(range(1, 26), 25)
+        currentnodes = [dros]
+        back_up1 = copy.deepcopy(currentnodes)
+        archive.append(back_up1)
 
-    # blijf runnen tot een de drosophila gelijk is aan de miranda
-    while all(item != mir for item in currentnodes):
+        # maak een counter om aantal stappen te tellen van drosophila naar miranda
+        counter = 0
 
-        # maak array om child nodes in op te slaan van de currentnodes
-        children = []
+        # blijf runnen tot een de drosophila gelijk is aan de miranda
+        while all(item != mir for item in currentnodes):
 
-        # maak voor elke currentnode in currentnodes alle kinderen en sla deze op
-        for currentnode in currentnodes:
-            right = 1
-            left = 0
-            for x in range(0, swaps):
-                currentnode[left:right + 1] = list(reversed(currentnode[left:right + 1]))
-                back_up = copy.deepcopy(currentnode)
-                state = False # houdt 'false' als child niet in archief
-                for y in archive:
-                    if back_up == y:
-                        state = True # maak state 'true' als child wel in archief
-                        break
-                if state == False:
-                    children.append(back_up)
-                currentnode[left:right + 1] = list(reversed(currentnode[left:right + 1]))
-                right += 1
-                if right == len(dros):
-                    left += 1
-                    right = left + 1
+            # maak array om child nodes in op te slaan van de currentnodes
+            children = []
 
-        # maak arrays aan voor nieuwe currentnodes en array voor score
-        currentnodes = []
+            # maak voor elke currentnode in currentnodes alle kinderen en sla deze op
+            for currentnode in currentnodes:
+                right = 1
+                left = 0
+                for x in range(0, swaps):
+                    currentnode[left:right + 1] = list(reversed(currentnode[left:right + 1]))
+                    back_up = copy.deepcopy(currentnode)
+                    state = False # houdt 'false' als child niet in archief
+                    for y in archive:
+                        if back_up == y:
+                            state = True # maak state 'true' als child wel in archief
+                            break
+                    if state == False:
+                        children.append(back_up)
+                    currentnode[left:right + 1] = list(reversed(currentnode[left:right + 1]))
+                    right += 1
+                    if right == len(dros):
+                        left += 1
+                        right = left + 1
 
-        '''
-        Kijken hoeveel elementen er al gesorteerd naast elkaar staan (zowel oplopend als aflopend)
-        en laat score ook toenemen als elementen al op hun goede plek staan
-        '''
-        scores = []
-        # vul array met scores voor elke child op basis van formule
-        for child in children:
-            score = 0
-            for i in range(len(child)):
-                if i < (len(child) - 1):
-                    # score +1 als volgende element huidige element +1 of -1 is
-                    if child[i] + 1 == child[i + 1] or child[i] - 1 == child[i + 1]:
-                        score += 1
-                    # 0.05 score erbij als een element op de goede plek staat
-                if child[i] == mir[i]:
-                    score += 0.05
-            scores.append(score)
+            # maak arrays aan voor nieuwe currentnodes en array voor score
+            currentnodes = []
 
-        # vindt indices van de max score
-        m1 = max(scores)
-        max_indices1 = [i for i, j in enumerate(scores) if j == m1]
+            '''
+            Kijken hoeveel elementen er al gesorteerd naast elkaar staan (zowel oplopend als aflopend)
+            en laat score ook toenemen als elementen al op hun goede plek staan
+            '''
+            scores = []
+            # vul array met scores voor elke child op basis van formule
+            for child in children:
+                score = 0
+                for i in range(len(child)):
+                    if i < (len(child) - 1):
+                        # score +1 als volgende element huidige element +1 of -1 is
+                        if child[i] + 1 == child[i + 1] or child[i] - 1 == child[i + 1]:
+                            score += 1
+                        # 0.05 score erbij als een element op de goede plek staat
+                    if child[i] == mir[i]:
+                        score += 0.05
+                scores.append(score)
 
-        # selecteer alle instanties in children met de hoogste score
-        for i in max_indices1:
-            currentnodes.append(children[i])
+            # vindt indices van de max score
+            m1 = max(scores)
+            max_indices1 = [i for i, j in enumerate(scores) if j == m1]
 
-        # sla al deze instanties op in het archief zodat ze niet nog een keer bereikt worden
-        for i in currentnodes:
-            back_up2 = copy.deepcopy(i)
-            archive.append(back_up2)
+            # selecteer alle instanties in children met de hoogste score
+            for i in max_indices1:
+                currentnodes.append(children[i])
 
-        # laat de counter voor aantal swaps met 1 toenemen
-        counter += 1
-        print counter
-        print "counter"
+            # sla al deze instanties op in het archief zodat ze niet nog een keer bereikt worden
+            for i in currentnodes:
+                back_up2 = copy.deepcopy(i)
+                archive.append(back_up2)
 
-        '''
-        Maximum aantal elementen op goede plaats als score
-        '''
+            # laat de counter voor aantal swaps met 1 toenemen
+            counter += 1
+        return counter
+
+count_total = []
+for i in range(100):
+    run = 0
+    run = bestFirst(mir, pos_swaps)
+    count_total.append(run)
+
+av_swaps = numpy.mean(count_total)
+print av_swaps
+
+
+
+
+   # # maak de eerste node aan (de dros) en sla op in archief
+   #  currentnodes = [dros]
+   #  back_up1 = copy.deepcopy(currentnodes)
+   #  archive.append(back_up1)
+   #
+   #  # maak een counter om aantal stappen te tellen van drosophila naar miranda
+   #  counter = 0
+   #
+   #  # blijf runnen tot een de drosophila gelijk is aan de miranda
+   #  while all(item != mir for item in currentnodes):
+   #
+   #      # maak array om child nodes in op te slaan van de currentnodes
+   #      children = []
+   #
+   #      # maak voor elke currentnode in currentnodes alle kinderen en sla deze op
+   #      for currentnode in currentnodes:
+   #          right = 1
+   #          left = 0
+   #          for x in range(0, swaps):
+   #              currentnode[left:right + 1] = list(reversed(currentnode[left:right + 1]))
+   #              back_up = copy.deepcopy(currentnode)
+   #              state = False # houdt 'false' als child niet in archief
+   #              for y in archive:
+   #                  if back_up == y:
+   #                      state = True # maak state 'true' als child wel in archief
+   #                      break
+   #              if state == False:
+   #                  children.append(back_up)
+   #              currentnode[left:right + 1] = list(reversed(currentnode[left:right + 1]))
+   #              right += 1
+   #              if right == len(dros):
+   #                  left += 1
+   #                  right = left + 1
+   #
+   #      # maak arrays aan voor nieuwe currentnodes en array voor score
+   #      currentnodes = []
+   #
+   #      '''
+   #      Kijken hoeveel elementen er al gesorteerd naast elkaar staan (zowel oplopend als aflopend)
+   #      en laat score ook toenemen als elementen al op hun goede plek staan
+   #      '''
+   #      scores = []
+   #      # vul array met scores voor elke child op basis van formule
+   #      for child in children:
+   #          score = 0
+   #          for i in range(len(child)):
+   #              if i < (len(child) - 1):
+   #                  # score +1 als volgende element huidige element +1 of -1 is
+   #                  if child[i] + 1 == child[i + 1] or child[i] - 1 == child[i + 1]:
+   #                      score += 1
+   #                  # 0.05 score erbij als een element op de goede plek staat
+   #              if child[i] == mir[i]:
+   #                  score += 0.05
+   #          scores.append(score)
+   #
+   #      # vindt indices van de max score
+   #      m1 = max(scores)
+   #      max_indices1 = [i for i, j in enumerate(scores) if j == m1]
+   #
+   #      # selecteer alle instanties in children met de hoogste score
+   #      for i in max_indices1:
+   #          currentnodes.append(children[i])
+   #
+   #      # sla al deze instanties op in het archief zodat ze niet nog een keer bereikt worden
+   #      for i in currentnodes:
+   #          back_up2 = copy.deepcopy(i)
+   #          archive.append(back_up2)
+   #
+   #      # laat de counter voor aantal swaps met 1 toenemen
+   #      counter += 1
+   #      print counter
+   #      print "counter"
+
+        # '''
+        # Maximum aantal elementen op goede plaats als score
+        # '''
         # array_right = []
         # # vul een array met hoeveel posities elke in vergelijking heeft met mir
         # for child in children:
@@ -183,9 +269,6 @@ def hillClimb(dros, mir, swaps):
         # # laat de counter voor aantal swaps met 1 toenemen
         # counter += 1
         # # print counter
-
-
-hillClimb(dros, mir, pos_swaps)
 
 
 
