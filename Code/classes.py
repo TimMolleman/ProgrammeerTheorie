@@ -105,10 +105,13 @@ class FruitFlies:
         if self.kitkat == 1:
             return "found"
         self.children = []
+        # maak 'dros' de root als er nog geen root is en maak children aan
         if root == 0:
             self.sec_count = 1
             root = self.dros
             self.children = self.Possible_swaps(root, 15)
+
+        # als er al een root is geweest (root == 1), doe onderstaande
         elif root == 1:
             root = self.dros
             self.children = self.Possible_swaps(root, 15)
@@ -116,7 +119,7 @@ class FruitFlies:
                 if self.count1[x] != 0:
                     self.layer = x
                     print self.layer, "118"
-                    if self.count1[x] == 215 and x > 0:
+                    if self.count1[x] == 15 and x > 0:
                         self.count[x] = 1
                     for y in range(0, x + 1):
                         #print self.children, "120"
@@ -131,7 +134,7 @@ class FruitFlies:
 
 
         self.target = mir
-        print root, self.children
+        print root, self.children, "dit"
         #print "go", root
         for x in range(0, 15):
             #self.sec_count +=1
@@ -152,13 +155,9 @@ class FruitFlies:
                     self.countgene += 1
         self.count1[self.layer] += 1
         self.layer += 1
-        print self.count1, "141", self.layer
+        print self.count1, "155", self.layer
         self.brute_force(1, mir)
                     # print "wtf"
-
-
-
-
 
 class Miranda:
     def __init__(self):
