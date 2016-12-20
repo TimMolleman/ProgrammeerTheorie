@@ -9,10 +9,10 @@ class FruitFlies:
     def __init__(self):
         # definieer random volgorde 25 genen
         #self.dros = [3,2,1,6,4,5]
-        self.dros = random.sample(range(1, 7), 6)
+        self.dros = random.sample(range(1, 26), 25)
         #self.dros = [6,7,5,4,3,2,1]
         # definieer genen van miranda 1 tot en met 25
-        self.mir = range(1,7)
+        self.mir = range(1,26)
         # set counter voor inversions
         self.count = 0
         #set counter voor genswaps
@@ -51,11 +51,11 @@ class FruitFlies:
     # double pancake
     def new_least_steps(self):
         # set end and start of genome
-        self.end = 5
+        self.end = 25
         self.start = 1
         # iterate over de genen
-        for x in range(0, 5):
-            for y in range(x, 5):
+        for x in range(0, 25):
+            for y in range(x, 25):
                 # als het gen aan het einde hoort flip en set nieuw eind
                 if self.dros[y] == self.end and self.dros != self.mir:
                     self.dros[y: self.end] = list(reversed(self.dros[y: self.end]))
@@ -68,6 +68,7 @@ class FruitFlies:
                     self.count += 1
                     self.countgene += ((y + 1) - (self.start - 1))
                     self.start += 1
+            print self.dros
         return (self.count, self.countgene)
     # count possible number of swaps
     def Amount_swaps(self):
@@ -179,43 +180,11 @@ class Miranda:
                 self.right = self.left + 1
         return self.array
 
-f = FruitFlies()
-m = Miranda()
-mir = m.Possible_swaps(21)
-swaps = f.Amount_swaps()
-print swaps
-array = f.Possible_swaps(f.dros, swaps)
-print array
-deze = f.brute_force(0, mir)
-print deze
-# class TrieNode:
-#
-#     def __init__(self):
-#         self.val = [3, 5, 2, 4, 1]
-#         self.pointers={}
-#
-# class Trie:
-#
-#     def __init__(self):
-#         self.root = TrieNode()
-#
-# shit = TrieNode()
-# print shit.val
-#
 
-# aantal swaps dat mogelijk is per array
+total = []
+for i in range(1000):
+    f = FruitFlies()
+    shit = f.new_least_steps()
+    total.append(shit[1])
+print numpy.mean(total)
 
-
-
-# av_trials = []
-#
-# for i in range(100):
-#     fly = FruitFlies()
-#     fly_count = fly.least_steps()
-#     av_trials.append(fly_count)
-#
-# print numpy.mean(av_trials)
-#
-# f = FruitFlies()
-# fly_count2 = f.BubbleSort()
-# print fly_count2
